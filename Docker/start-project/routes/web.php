@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/simples', function () {
+    return "<h1>Rota simples</h1>";
 });
+Route::resource('/eixo', 'App\Http\Controllers\EixoController');
+Route::resource('/eixo', 'App\Http\Controllers\NivelController');
+Route::resource('/curso', 'App\Http\Controllers\CursoController');
+Route::resource('/permission', 'App\Http\Controllers\PermissionController');
