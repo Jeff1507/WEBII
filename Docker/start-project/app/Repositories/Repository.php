@@ -22,4 +22,5 @@ class CursoRepository extends Repository {
     public function selectAllWith(array $orm) {
         return $this->model::with($orm)->get();
     }
+    
 }
