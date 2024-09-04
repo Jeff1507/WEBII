@@ -12,12 +12,12 @@ class CursoController extends Controller
 {
     protected $repository;
     public function __construct(){
-    $this->repository = new CursoRepository();
-}
+        $this->repository = new CursoRepository();
+    }
     public function index()
     {
         $data = $this->repository->selectAllWith(['eixo', 'nivel']);
-        return $data;
+        return view('curso.index', compact('data'));
     }
 
     /**
@@ -25,7 +25,10 @@ class CursoController extends Controller
      */
     public function create()
     {
-        //
+        $eixos = (new EixoRepository())->selectAll();
+        $niveis = (new NivelRepository())->selectAll();
+        return view('curso.create', compact(['eixos', 'niveis']));
+
     }
 
     /**
@@ -36,16 +39,21 @@ class CursoController extends Controller
         $objEixo = (new EixoRepository())->findById($request->eixo_id);
         $objNivel = (new NivelRepository())->findById($request->nivel_id);
         if(isset($objEixo) && isset($objNivel)) {
-        $obj = new Curso();
-        $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
-        $obj->sigla = mb_strtoupper($request->sigla, 'UTF-8');
-        $obj->total_horas = $request->horas;
-        $obj->eixo()->associate($objEixo);
-        $obj->nivel()->associate($objNivel);
-        $this->repository->save($obj);
-        return "<h1>Store - OK!</h1>";
+            $obj = new Curso();
+            $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
+            $obj->sigla = mb_strtoupper($request->sigla, 'UTF-8');
+            $obj->total_horas = $request->horas;
+            $obj->eixo()->associate($objEixo);
+            $obj->nivel()->associate($objNivel);
+            $this->repository->save($obj);
+            return redirect()->route('curso.index');
         }
-        return "<h1>Store - Not found Eixo or Nível!</h1>";
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "danger")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Não foi possível efetuar o registro!")
+            ->with('link', "curso.index");
     }
 
     /**
@@ -53,8 +61,8 @@ class CursoController extends Controller
      */
     public function show(string $id)
     {
-        $data = $this->repository->findById($id);
-        return $data;
+        $data = $this->repository->findByIdWith(['eixo', 'nivel'], $id);
+        return view('curso.show', compact('data'));
     }
 
     /**
@@ -62,7 +70,18 @@ class CursoController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = $this->repository->findById($id);
+        if(isset($data)){
+            $eixos = (new EixoRepository())->selectAll();
+            $niveis = (new NivelRepository())->selectAll();
+            return view('curso.edit', compact(['data', 'eixos', 'niveis']));
+        }
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "warning")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Curso não encontrado para alteração!")
+            ->with('link', "curso.index");
     }
 
     /**
@@ -74,16 +93,22 @@ class CursoController extends Controller
         $objEixo = (new EixoRepository())->findById($request->eixo_id);
         $objNivel = (new NivelRepository())->findById($request->nivel_id);
         if(isset($obj) && isset($objEixo) && isset($objNivel)) {
-        $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
-        $obj->sigla = mb_strtoupper($request->sigla, 'UTF-8');
-        $obj->total_horas = $request->horas;
-        $obj->eixo()->associate($objEixo);
-        $obj->nivel()->associate($objNivel);
-        $this->repository->save($obj);
-        return "<h1>Upate - OK!</h1>";
+            $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
+            $obj->sigla = mb_strtoupper($request->sigla, 'UTF-8');
+            $obj->total_horas = $request->horas;
+            $obj->eixo()->associate($objEixo);
+            $obj->nivel()->associate($objNivel);
+            $this->repository->save($obj);
+            return redirect()->route('curso.index');
         }
-        return "<h1>Upate - Not found Curso or Eixo or Nível!</h1>";
-            }
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "danger")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Não foi possível efetuar o registro!")
+            ->with('link', "curso.index");
+
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -91,8 +116,14 @@ class CursoController extends Controller
     public function destroy(string $id)
     {
         if($this->repository->delete($id)) {
-            return "<h1>Delete - OK!</h1>";
+            return redirect()->route('curso.index');
         }
-        return "<h1>Delete - Not found Eixo!</h1>";
+            
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "danger")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Não foi possível efetuar o registro!")
+            ->with('link', "curso.index");
     }
 }

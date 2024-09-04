@@ -6,27 +6,32 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class textbox extends Component
+class selectbox extends Component
 {
     public $name;
     public $label;
-    public $type;
-    public $value;
+    public $color;
+    public $data;
+    public $field;
     public $disabled;
-    public function __construct($name, $label, $type, $value, $disabled) {
+    public $select;
+
+    public function __construct($name, $label, $color, $data, $field, $disabled, $select) {
         $this->name = $name;
         $this->label = $label;
-        $this->type = $type;
-        $this->value = $value;
+        $this->color = $color;
+        $this->data = $data;
+        $this->field = $field;
         $this->disabled = $disabled;
+        $this->select = $select;
     }
-
+        
 
     /**
      * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string
     {
-        return view('components.textbox');
+        return view('components.selectbox');
     }
 }

@@ -53,12 +53,12 @@ class PermissionController extends Controller
      */
     public function show(string $id) {
         $data = $this->repository->findByCompositeIdWith(
-        Permission::getKeys(), // keys
-        explode("_", $id), // ids
-        ['role', 'resource'] // orm
+            Permission::getKeys(), // keys
+            explode("_", $id), // ids
+            ['role', 'resource'] // orm
         );
         return $data;
-        }
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -76,24 +76,24 @@ class PermissionController extends Controller
         $obj = $this->repository->findByCompositeId(
             Permission::getKeys(), // keys
             explode("_", $id) // ids
-            );
-            $objRole = (new RoleRepository())->findById($request->role_id);
-            $objResource = (new ResourceRepository())->findById($request->resource_id);
-            if(isset($obj) && isset($objRole) && isset($objResource)) {
+        );
+        $objRole = (new RoleRepository())->findById($request->role_id);
+        $objResource = (new ResourceRepository())->findById($request->resource_id);
+        if(isset($obj) && isset($objRole) && isset($objResource)) {
             if($this->repository->updateCompositeId(
-            Permission::getKeys(), // keys
-            explode("_", $id), // ids
-            "permissions", // table
-            [ // values
-            "permission" => $request->permissao
-            ]
+                Permission::getKeys(), // keys
+                explode("_", $id), // ids
+                "permissions", // table
+                [ // values
+                    "permission" => $request->permissao
+                ]
             ))
             {
-            return "<h1>Upate - OK!</h1>";
+                return "<h1>Upate - OK!</h1>";
             }
-            }
-            return "<h1>Upate - Not found Permission or Role or Resource!</h1>";
-                }
+        }
+        return "<h1>Upate - Not found Permission or Role or Resource!</h1>";
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -104,10 +104,10 @@ class PermissionController extends Controller
             Permission::getKeys(), // keys
             explode("_", $id), // ids
             "permissions" // table
-            ))
-            {
+        ))
+        {
             return "<h1>Delete - OK!</h1>";
-            }
-            return "<h1>Delete - Not found Eixo!</h1>";
+        }
+        return "<h1>Delete - Not found Eixo!</h1>";
     }
 }

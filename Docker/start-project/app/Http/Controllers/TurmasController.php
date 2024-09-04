@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Repositories\TurmasRepository;
 
 class TurmasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $repository;
+    private $rules = [
+        'ano' => 'required|unique:turmas',
+    ];
+    private $messages = [
+        "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+        "unique" => "Já existe uma truam cadastrada com esse [:attribute]!",
+    ];
+    public function __construct(){
+        $this->repository = new TurmasRepository();
+    }
     public function index()
     {
         //
     }
+    
+        
 
     /**
      * Show the form for creating a new resource.

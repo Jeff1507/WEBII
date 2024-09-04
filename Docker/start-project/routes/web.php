@@ -20,6 +20,10 @@ use App\Http\Controllers\PermissionController;
 Route::get('/', function () {
     return "<h1>Rota simples</h1>";
 });
+Route::get('/site/register', 'App\Http\Controllers\AlunoController@register')
+->name('site.register');
+Route::post('/site/success', 'App\Http\Controllers\AlunoController@storeRegister')
+->name('site.submit');
 
 // Definindo as rotas de recursos
 Route::resource('/eixo', 'App\Http\Controllers\EixoController');

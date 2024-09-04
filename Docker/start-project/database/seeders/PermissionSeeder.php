@@ -14,6 +14,7 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $data = [
+            //ADMINISTRADOR
             ["role_id" => 1, "resource_id" => 1, "permission" => true],
             ["role_id" => 1, "resource_id" => 2, "permission" => true],
             ["role_id" => 1, "resource_id" => 3, "permission" => true],

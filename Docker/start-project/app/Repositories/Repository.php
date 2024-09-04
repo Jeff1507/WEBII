@@ -15,27 +15,36 @@ class Repository {
     public function findById(int $id) {
     return $this->model->find($id);
     }
+    public function findByIdWith(array $orm, $id) {
+        return $this->model::with($orm)->find($id);
+    }
     public function findDeletedById(int $id) {
     return $this->model->onlyTrashed()->find($id);
     }
     public function findFirstById(int $id) {
     return $this->model->find($id)->first();
     }
+
     public function findByColumn($column, $value) {
     return $this->model->where($column, $value)->get();
     }
+    public function findFirstByColumn($column, $value) {
+        return $this->model->where($column, $value)->get()->first();
+    }
     public function save($obj) {
         try {
-        $obj->save();
-        return true;
+            $obj->save();
+            return true;
         } catch(Exception $e) { dd($e); }
+
         return false;
-        }
+    }
         public function saveAndReturnId($obj) {
         try {
-        $obj->save();
-        return $obj->id;
+            $obj->save();
+            return $obj->id;
         } catch(Exception $e) { dd($e); }
+
         return -1;
         }
         public function delete($id) {
@@ -60,8 +69,8 @@ class Repository {
             return false;
         }    
     public function selectAllWith(array $orm) {
-            return $this->model::with($orm)->get();
-            }
+        return $this->model::with($orm)->get();
+    }
             public function findByCompositeId($keys, $ids) {
                 return $this->model::where($this->createRule($keys, $ids))->first();
                 }
@@ -71,8 +80,8 @@ class Repository {
                     public function updateCompositeId($keys, $ids, $table, $values) {
                     try {
                     DB::table($table)
-                    ->where($this->createRule($keys, $ids))
-                    ->update($values);
+                        ->where($this->createRule($keys, $ids))
+                        ->update($values);
                     return true;
                     } catch(Exception $e) { dd($e); }
                     return false;

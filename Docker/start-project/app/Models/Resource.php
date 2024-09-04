@@ -9,6 +9,6 @@ class Resource extends Model
 {
     use HasFactory;
     public function role() {
-    return $this->belongsToMany('\App\Models\Role', 'permissions');
-}
+        return $this->belongsToMany('\App\Models\Role', 'permissions');
+    }
 }
