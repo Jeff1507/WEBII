@@ -23,9 +23,18 @@ class EixoController extends Controller
     }
     public function store(Request $request) {
         $obj = new Eixo();
-        $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
-        $this->repository->save($obj);
-        return redirect()->route('eixo.index');
+        if (isset($obj)) {
+            $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
+            $this->repository->save($obj);
+            return redirect()->route('eixo.index');
+            # code...
+        }
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "warning")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Eixo não encontrado para alteração!")
+            ->with('link', "eixo.index");
     }
     public function show(string $id) {
         $data = $this->repository->findById($id);
