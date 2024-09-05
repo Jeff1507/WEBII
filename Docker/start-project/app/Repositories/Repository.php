@@ -28,6 +28,12 @@ class Repository {
     public function findByColumn($column, $value) {
     return $this->model->where($column, $value)->get();
     }
+    public function findByColumnWith($column, $value, $orm, object $paginate) {
+        if($paginate->use) 
+            return $this->model::with($orm)->where($column, $value)->paginate($paginate->rows);
+        
+        return $this->model::with($orm)->where($column, $value)->get();
+    }
     public function findFirstByColumn($column, $value) {
         return $this->model->where($column, $value)->get()->first();
     }

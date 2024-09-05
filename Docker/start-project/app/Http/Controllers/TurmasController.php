@@ -132,11 +132,9 @@ class TurmasController extends Controller {
             ->with('link', "turma.index");
     }
 
-    public function getClassesByCourse($value) {
-        $data = $this->repository->findByColumn(
-            'curso_id', $value,
-            (object) ["use" => false, "rows" => 0]
-        );
+    public function getTurmasByCurso($value) {
+        $data = $this->repository->findByColumn('curso_id', $value);
         return json_encode($data);
     }
+        
 }
