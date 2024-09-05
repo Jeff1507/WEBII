@@ -12,34 +12,61 @@ class EixoController extends Controller
     public function __construct(){
     $this->repository = new EixoRepository();
     }
+    public function create()
+    {
+        return view('eixo.create');
+
+    }
     public function index() {
         $data = $this->repository->selectAll();
-        return $data;
+        return view("eixo.index", compact('data'));
     }
     public function store(Request $request) {
         $obj = new Eixo();
         $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
         $this->repository->save($obj);
-        return "<h1>Store - OK!</h1>";
+        return redirect()->route('eixo.index');
     }
     public function show(string $id) {
         $data = $this->repository->findById($id);
-        return $data;
+        return view('eixo.show', compact('data'));
     
+    }
+    public function edit(string $id){
+        $data = $this->repository->findById($id);
+        if(isset($data)) {
+            return view('eixo.edit', compact('data'));
+        }
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "warning")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Eixo não encontrado para alteração!")
+            ->with('link', "eixo.index");
     }
     public function update(Request $request, string $id) {
         $obj = $this->repository->findById($id);
         if(isset($obj)) {
             $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
             $this->repository->save($obj);
-            return "<h1>Upate - OK!</h1>";
+            return redirect()->route('eixo.index');
         }
-        return "<h1>Upate - Not found Eixo!</h1>";
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "warning")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Eixo não encontrado para alteração!")
+            ->with('link', "eixo.index");
     }
     public function destroy(string $id) {
         if($this->repository->delete($id)) {
-            return "<h1>Delete - OK!</h1>";
+            return redirect()->route('eixo.index');
         }
-        return "<h1>Delete - Not found Eixo!</h1>";
+        return view('message')
+            ->with('template', "main")
+            ->with('type', "danger")
+            ->with('titulo', "OPERAÇÃO INVÁLIDA")
+            ->with('message', "Não foi possível efetuar o registro!")
+            ->with('link', "eixo.index");
     }
 }
